@@ -1,0 +1,113 @@
+#
+# Elastic template
+#
+# Pristup bez hesla, neni potreba nastavovat vubec nic
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch-ackee
+  labels:
+    app: elasticsearch-ackee
+    role: server
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch-ackee
+      role: server
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: elasticsearch-ackee
+        role: server
+        tier: backend
+    spec:
+      containers:
+      - name: elasticsearch-ackee
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - IPC_LOCK
+        image: eu.gcr.io/%PROJECT_NAME%/docker-es/elastic:develop.19
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: CLUSTER_NAME
+          value: %PROJECT_NAME%-es6
+        - name: ES_MASTER
+          value: "false"
+        - name: ES_DATA
+          value: "false"
+        - name: ES_INGEST
+          value: "false"
+        - name: HTTP_ENABLED
+          value: "true"
+        - name: ES_JAVA_OPTS
+          value: -Xms256m -Xmx256m
+        - name: NETWORK_HOST
+          value: _site_,_lo_
+        - name: "GCE_PROJECT"
+          value: %PROJECT_NAME%
+        - name: "GCE_ZONE"
+          value: "europe-west3-c"
+        - name: PROCESSORS
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.cpu
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
+        ports:
+        - containerPort: 9200
+          name: http
+          protocol: TCP
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: transport
+          initialDelaySeconds: 220
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /_cluster/health
+            port: http
+          initialDelaySeconds: 220
+          timeoutSeconds: 5
+      initContainers:
+      - name: sysctl
+        securityContext:
+          privileged: true
+        image: busybox
+        command:
+         - sysctl
+         - "-w"
+         - "vm.max_map_count=262144"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+  labels:
+    app: elasticsearch-ackee
+    role: server
+    tier: backend
+spec:
+  selector:
+    app: elasticsearch-ackee
+    role: server
+    tier: backend
+  ports:
+  - name: http
+    port: 9200

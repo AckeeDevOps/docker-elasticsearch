@@ -1,0 +1,18 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backup-es
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backup-es
+            image: pstauffer/curl
+            args:
+            - /bin/sh
+            - -c
+            - curl -s -XPUT http://elasticsearch:9200/_snapshot/ackee-%PROJECT_NAME%-backup/snapshot_`date +%Y%m%d%H%M`?wait_for_completion=true
+          restartPolicy: OnFailure
