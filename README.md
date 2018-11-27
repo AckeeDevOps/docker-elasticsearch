@@ -2,6 +2,8 @@
 
 This image is meant to be "gateway" to Elasticsearch instances running on GCE - it should not hold a data, should not ingest a data, it should just provide a endpoint to reach a ES cluster from k8s cluster.
 
+It works together with Ackee Packer image - https://github.com/AckeeDevOps/packer-elasticsearch deployed by Terraform
+
 This image is build on top of official ES image with these extras preinstalled :
 * GCS repository plugin for backups - https://www.elastic.co/guide/en/elasticsearch/plugins/6.4/repository-gcs.html
 * GCE discovery plugin for hosts discovery - https://www.elastic.co/guide/en/elasticsearch/plugins/6.4/discovery-gce-usage-long.html
