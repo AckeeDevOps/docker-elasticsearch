@@ -35,9 +35,9 @@ We need dummy default values here, otherwise Elasticsearch plugin installer will
 
 Backups are done using cronjob specified in `k8s/es-backup.yml`. But before first backup (snapshot) we need to define repository.
 
-Note : This approach is using service account of GCE instances and it must have permission to write to GCS bucket. (Storage : Write)
+Note : if you want to use this image for data nodes a backup them, starting with ES version 6.4 you can't use "application default credentials", so you must create Service Account and insert it to every data node's elaticsearch-keystore
 
-### Create GCS repository
+### Define GCS repository
 
     curl -XPUT http://elasticsearch:9200/_snapshot/ackee-%PROJECT_NAME%-backup?pretty -H 'Content-Type: application/json' -d '{
         "type": "gcs",
