@@ -1,6 +1,8 @@
-# Ackee k8s Elasticsearch image + GCS backup plugin
+# Ackee Elasticsearch image with GCE discovery service + GCS backup plugin
 
 This image is meant to be "gateway" to Elasticsearch instances running on GCE - it should not hold a data, should not ingest a data, it should just provide a endpoint to reach a ES cluster from k8s cluster.
+
+It works together with Ackee Packer image - https://github.com/AckeeDevOps/packer-elasticsearch deployed by Terraform module https://github.com/AckeeDevOps/terraform-elasticsearch
 
 This image is build on top of official ES image with these extras preinstalled :
 * GCS repository plugin for backups - https://www.elastic.co/guide/en/elasticsearch/plugins/6.4/repository-gcs.html
@@ -33,9 +35,9 @@ We need dummy default values here, otherwise Elasticsearch plugin installer will
 
 Backups are done using cronjob specified in `k8s/es-backup.yml`. But before first backup (snapshot) we need to define repository.
 
-Note : This approach is using service account of GCE instances and it must have permission to write to GCS bucket. (Storage : Write)
+Note : if you want to use this image for data nodes a backup them, starting with ES version 6.4 you can't use "application default credentials", so you must create Service Account and insert it to every data node's elaticsearch-keystore
 
-### Create GCS repository
+### Define GCS repository
 
     curl -XPUT http://elasticsearch:9200/_snapshot/ackee-%PROJECT_NAME%-backup?pretty -H 'Content-Type: application/json' -d '{
         "type": "gcs",
