@@ -1,3 +1,4 @@
+# Keep in sync with : https://github.com/AckeeDevOps/docker-elasticsearch/blob/master/k8s/elasticsearch-6-persistent.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
