@@ -1,45 +1,48 @@
 #
 # Elastic template
 #
-# Pristup bez hesla, neni potreba nastavovat vubec nic
+# Slouží jako gateway ke clusteru deploynutému na VM's
 #
+# Keep in sync with : https://github.com/AckeeDevOps/docker-elasticsearch/blob/master/k8s/elasticsearch-6-gateway.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: elasticsearch-ackee
+  name: elasticsearch
   labels:
-    app: elasticsearch-ackee
+    app: elasticsearch
     role: server
     tier: backend
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: elasticsearch-ackee
+      app: elasticsearch
       role: server
       tier: backend
   template:
     metadata:
       labels:
-        app: elasticsearch-ackee
+        app: elasticsearch
         role: server
         tier: backend
     spec:
       containers:
-      - name: elasticsearch-ackee
+      - name: elasticsearch
         securityContext:
           privileged: true
           capabilities:
             add:
               - IPC_LOCK
-        image: eu.gcr.io/%PROJECT_NAME%/docker-es/elastic:develop.19
+        image: ackee/docker-elasticsearch:latest
         env:
         - name: NODE_NAME
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
         - name: CLUSTER_NAME
-          value: %PROJECT_NAME%-es6
+          value: %PROJECT_NAME%
         - name: ES_MASTER
           value: "false"
         - name: ES_DATA
@@ -53,9 +56,9 @@ spec:
         - name: NETWORK_HOST
           value: _site_,_lo_
         - name: "GCE_PROJECT"
-          value: %PROJECT_NAME%
+          value: "%PROJECT_NAME%"
         - name: "GCE_ZONE"
-          value: "europe-west3-c"
+          value: europe-west3-c
         - name: PROCESSORS
           valueFrom:
             resourceFieldRef:
@@ -100,14 +103,33 @@ kind: Service
 metadata:
   name: elasticsearch
   labels:
-    app: elasticsearch-ackee
+    app: elasticsearch
     role: server
     tier: backend
 spec:
   selector:
-    app: elasticsearch-ackee
+    app: elasticsearch
     role: server
     tier: backend
   ports:
   - name: http
     port: 9200
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-discovery
+  labels:
+    app: elasticsearch
+    role: server
+    tier: backend
+spec:
+  selector:
+    app: elasticsearch
+    role: server
+    tier: backend
+  ports:
+  - name: transport
+    port: 9300
+    protocol: TCP
+  clusterIP: None
