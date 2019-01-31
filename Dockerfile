@@ -18,10 +18,13 @@ RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-i
 
 COPY stackdriver.repo /etc/yum.repos.d/google-cloud-monitoring.repo
 
-RUN sudo yum -y update
-RUN sudo yum -y -q install redhat-lsb-core sudo curl
+USER root
+
+RUN yum -y update
+RUN yum -y -q install redhat-lsb-core sudo curl
 #RUN sudo yum -y install stackdriver-agent --nogpgcheck
 
+USER elasticsearch
 #COPY setup_stackdriver.sh /opt/01-setup-stackdriver.sh
 COPY ackee_entrypoint.sh /ackee_entrypoint.sh
 
