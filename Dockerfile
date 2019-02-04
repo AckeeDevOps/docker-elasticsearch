@@ -1,4 +1,4 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch:6.5.4
+FROM docker.elastic.co/elasticsearch/elasticsearch:6.4.3
 
 MAINTAINER tomas.hejatko@gmail.com
 
@@ -12,15 +12,17 @@ RUN rm -Rf /usr/share/elasticsearch/x-pack
 
 RUN rm -Rf /usr/share/elasticsearch/modules/x-pack*
 
+RUN rm -Rf /usr/share/elasticsearch/plugins/x-pack*
+
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch discovery-gce
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch repository-gcs
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-icu
 
-COPY stackdriver.repo /etc/yum.repos.d/google-cloud-monitoring.repo
+#COPY stackdriver.repo /etc/yum.repos.d/google-cloud-monitoring.repo
 
 RUN yum -y update
 RUN yum -y -q install redhat-lsb-core sudo curl
-RUN sudo yum -y install stackdriver-agent --nogpgcheck
+#RUN sudo yum -y install stackdriver-agent --nogpgcheck
 
 #COPY setup_stackdriver.sh /opt/01-setup-stackdriver.sh
 COPY ackee_entrypoint.sh /ackee_entrypoint.sh
