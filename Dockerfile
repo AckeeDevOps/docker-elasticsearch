@@ -8,12 +8,6 @@ ENV MEMORY_LOCK false
 COPY --chown=elasticsearch:elasticsearch config/elasticsearch.yml /usr/share/elasticsearch/config/
 COPY --chown=elasticsearch:elasticsearch config/log4j2.properties /usr/share/elasticsearch/config/
 
-RUN rm -Rf /usr/share/elasticsearch/x-pack
-
-RUN rm -Rf /usr/share/elasticsearch/modules/x-pack*
-
-RUN rm -Rf /usr/share/elasticsearch/plugins/x-pack*
-
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch discovery-gce
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch repository-gcs
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-icu

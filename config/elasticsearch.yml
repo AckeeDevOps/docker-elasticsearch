@@ -9,7 +9,7 @@ node:
 
 path:
   data: ${DATADIR:/usr/share/elasticsearch/data}
-  
+
 processors: ${PROCESSORS:1}
 
 network.host: _site_,_lo_
