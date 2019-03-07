@@ -11,6 +11,7 @@ COPY --chown=elasticsearch:elasticsearch config/log4j2.properties /usr/share/ela
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch discovery-gce
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch repository-gcs
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-icu
+RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch x-pack
 
 #COPY stackdriver.repo /etc/yum.repos.d/google-cloud-monitoring.repo
 
