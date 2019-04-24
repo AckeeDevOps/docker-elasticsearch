@@ -27,7 +27,7 @@ RUN yum -y -q install redhat-lsb-core sudo curl
 #RUN sudo yum -y install stackdriver-agent --nogpgcheck
 
 RUN cp bin/es-docker /usr/local/bin/docker-entrypoint.sh
-USER elasticsearch
+#USER elasticsearch
 COPY hack_keystore.sh /opt/01-hack_keystore.sh
 COPY ackee_entrypoint.sh /ackee_entrypoint.sh
 
