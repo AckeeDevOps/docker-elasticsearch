@@ -30,7 +30,9 @@ RUN cp bin/es-docker /usr/local/bin/docker-entrypoint.sh
 COPY hack_keystore.sh /opt/01-hack_keystore.sh
 COPY ackee_entrypoint.sh /ackee_entrypoint.sh
 
-RUN cp /usr/local/bin/docker-entrypoint.sh /opt/03-original-entrypoint.sh && mv /ackee_entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN chown elasticsearch:elasticsearch /usr/local/bin/docker-entrypoint.sh
+RUN mv /usr/local/bin/docker-entrypoint.sh /opt/03-original-entrypoint.sh && mv /ackee_entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 USER elasticsearch
