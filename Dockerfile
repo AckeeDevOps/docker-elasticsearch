@@ -32,4 +32,5 @@ COPY ackee_entrypoint.sh /ackee_entrypoint.sh
 
 RUN cp /usr/local/bin/docker-entrypoint.sh /opt/03-original-entrypoint.sh && mv /ackee_entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 USER elasticsearch
