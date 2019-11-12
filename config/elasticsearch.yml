@@ -15,14 +15,12 @@ bootstrap:
   memory_lock: ${MEMORY_LOCK:false}
 
 http:
-  enabled: ${HTTP_ENABLED:true}
-  compression: true
   cors:
     enabled: ${HTTP_CORS_ENABLE:true}
     allow-origin: ${HTTP_CORS_ALLOW_ORIGIN:*}
 
-cloud.gce.project_id: ${GCE_PROJECT:dummy}
-cloud.gce.zone: ${GCE_ZONE:dummy}
+cloud.gce.project_id: ${GCE_PROJECT:changeme}
+cloud.gce.zone: ${GCE_ZONE:changeme}
 
 discovery:
   zen:
