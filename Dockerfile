@@ -32,7 +32,9 @@ COPY ackee_entrypoint.sh /ackee_entrypoint.sh
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN chown elasticsearch:elasticsearch /usr/local/bin/docker-entrypoint.sh
-RUN mv /usr/local/bin/docker-entrypoint.sh /opt/03-original-entrypoint.sh && mv /ackee_entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN echo "sleep infinity" > /opt/03-hack-entrypoint.sh
+RUN mv /ackee_entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+#RUN mv /usr/local/bin/docker-entrypoint.sh /opt/03-original-entrypoint.sh && mv /ackee_entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 USER elasticsearch
