@@ -1,4 +1,4 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch:7.17.7
+FROM docker.elastic.co/elasticsearch/elasticsearch:8.13.0
 
 MAINTAINER tomas.hejatko@gmail.com
 
